@@ -1,6 +1,7 @@
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const consoleTable = require("console.table");
+const { allowedNodeEnvironmentFlags } = require("process");
 // connect info for sql database
 const connection = mysql.createConnection({
     host: "localhost",
@@ -29,6 +30,26 @@ const start = () => {
         } else {
             connection.end();
             process.exit(0);
+        }
+    });
+};
+
+// function handling add either departments, roles, employees
+const add = () => {
+    inquirer.prompt({
+        type: "list",
+        name: "add",
+        message: "What would you like to add?",
+        choices: ["DEPARTMENTS", "ROLES", "EMPLOYEES"],
+    })
+    .then((res) => {
+        // based on answer will call certain functions
+        if (res.add === "DEPARTMENTS") {
+            addDepartment();
+        } else if (res.add === "ROLES") {
+            addRole();
+        } else if (res.add === "EMPLOYEES") {
+            addEmployees();
         }
     });
 };
