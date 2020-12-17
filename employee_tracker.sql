@@ -24,3 +24,7 @@ CREATE TABLE department(
     name VARCHAR(30) NOT NULL,
     PRIMARY KEY(id)
 
+SELECT * FROM employee;
+SELECT * FROM role;
+SELECT * FROM department;
+
