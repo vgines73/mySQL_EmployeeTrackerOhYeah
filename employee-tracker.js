@@ -74,7 +74,7 @@ const addDepartment = () => {
             // after user answers this, insert a new departent in the database with info
             connection.query(
                 'INSERT INTO department SET ?',
-                { name: res.departmentName },
+                { department_name: res.departmentName },
                 (err) => {
                     if (err) throw err;
                     console.log("Department successfully created.");
@@ -90,17 +90,17 @@ const addRole = () => {
         {
             type: "input",
             name: "title",
-            message: "What is their title?"
+            message: "What is the new job title?"
         },
         {
             type: "input",
             name: "salary",
-            message: "What is their salary?"
+            message: "What is the salary for that job?"
         },
         {
             type: "input",
             name: "departmentId",
-            message: "What is thier department ID?"
+            message: "What is the department ID?"
         }
     ])
         .then((res) => {
@@ -135,9 +135,16 @@ const addEmployees = () => {
             message: "What is their Last Name?"
         },
         {
-            type: "input",
-            name: "managerId",
-            message: "What is the Manager's ID?"
+            type: "list",
+            name: "title",
+            message: "what is thier job title?",
+            choices: ["Manager", "Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"]
+        },
+        {
+            type: "list",
+            name: "manager",
+            message: "Who is thier Manager?",
+            choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
         }
     ])
         .then((res) => {
@@ -147,8 +154,8 @@ const addEmployees = () => {
                 {
                     first_name: res.firstName,
                     last_name: res.lastName,
-                    role_id: res.roleId,
-                    manager_id: res.managerId
+                    role_id: res.title,
+                    manager_id: res.manager
                 },
                 (err) => {
                     if (err) throw err;
@@ -167,7 +174,7 @@ const view = () => {
         type: "list",
         name: "view",
         message: "What would you like to view?",
-        choices: ["View all employees", "View all Employees by Department", "View all Employees by Manager",],
+        choices: ["View all employees", "View all Employees by Department", "View all Employees by Role", "View all Employees by Manager",],
     })
         .then((res) => {
             // based on answer will call certain functions
@@ -200,8 +207,14 @@ const viewEmployees = () => {
 };
 // function to view all employees by department
 const viewEmployeesByDepartment = () => {
+    let query = 
+    "SELECT employee.id, employee.first_name, employee.last_name, department.department_name "
+    query +=
+        "FROM employee INNER JOIN role ON employee.role_id = role.id "
+    query +=
+        "INNER JOIN department ON role.department_id = department.id;"
     console.log("Selecting all employees by department...\n");
-    connection.query("SELECT * FROM department", (err, res) => {
+    connection.query(query, (err, res) => {
         if (err) throw err;
         // Log all results
         console.table(res)
@@ -210,8 +223,12 @@ const viewEmployeesByDepartment = () => {
 };
 // function to view all employees by role
 const viewEmployeesByRole = () => {
+    let query = 
+    "SELECT employee.id, employee.first_name, employee.last_name, role.title "
+    query +=
+        "FROM employee INNER JOIN role ON employee.role_id = role.id;"
     console.log("Selecting all employees by role...\n");
-    connection.query("SELECT * FROM role", (err, res) => {
+    connection.query(query, (err, res) => {
         if (err) throw err;
         // Log all results
         console.table(res);
