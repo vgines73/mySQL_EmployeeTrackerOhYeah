@@ -11,13 +11,20 @@ const connection = mysql.createConnection({
     database: "employee_tracker_db",
 });
 
+// Connect to the Database
+connection.connect((err) => {
+    if (err) throw err;
+    console.log(`connected as id ${connection.threadId}\n`)
+
+});
+
 // function which prompts user what action to take add view update
 const start = () => {
     inquirer.prompt({
         type: "list",
         name: "start",
         message: "What do you want to do?",
-        choices: ["ADD", "VIEW", "UPDATE", "EXIT"],
+        choices: ["ADD", "VIEW", "UPDATE", "REMOVE", "EXIT"],
     })
         .then((res) => {
             // based on answer will call certain functions
@@ -177,12 +184,18 @@ const view = () => {
 };
 // function to view all employees
 const viewEmployees = () => {
+    let query = 
+        "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name, employee.manager_id "
+    query +=
+        "FROM employee INNER JOIN role ON employee.role_id = role.id "
+    query +=
+        "INNER JOIN department ON role.department_id = department.id;"
     console.log("Selecting all employees...\n");
-    connection.query("SELECT * FROM employee", (err, res) => {
+    connection.query(query, (err, res) => {
         if (err) throw err;
         // Log all results
         console.table(res);
-        connection.end();
+        start();
     });
 };
 // function to view all employees by department
@@ -192,7 +205,7 @@ const viewEmployeesByDepartment = () => {
         if (err) throw err;
         // Log all results
         console.table(res)
-        connection.end();
+        start();
     });
 };
 // function to view all employees by role
@@ -202,7 +215,7 @@ const viewEmployeesByRole = () => {
         if (err) throw err;
         // Log all results
         console.table(res);
-        connection.end();
+        start();
     });
 };
 // function to view all employees by manager
@@ -212,7 +225,7 @@ const viewEmployeesByManager = () => {
         if (err) throw err;
         // Log all results
         console.table(res);
-        connection.end();
+        start();
     });
 };
 // FUNCTIONS IF USER PICKS UPDATE (UPDATE)
@@ -281,14 +294,9 @@ const removeEmployee = () => {
             message: "Which Employee would you like to remove?",
             choices: []
         }
-    )
-}
-// Connect to the Database
-connection.connect((err) => {
-    if (err) throw err;
-    console.log(`connected as id ${connection.threadId}\n`)
+    );
+};
 
-})
 
 
 

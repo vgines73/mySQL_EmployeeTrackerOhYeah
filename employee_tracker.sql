@@ -21,7 +21,7 @@ CREATE TABLE role(
 
 CREATE TABLE department(
     id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(30) NOT NULL,
+    department_name VARCHAR(30) NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -61,12 +61,15 @@ VALUES (5, "Power Forward", 50000, 2);
 INSERT INTO role(id, title, salary, department_id)
 VALUES (6, "Center", 50000, 2);
 
-INSERT INTO department(name)
+INSERT INTO department(department_name)
 VALUES ("Management");
-INSERT INTO department(name)
+INSERT INTO department(department_name)
 VALUES ("Player");
 
 SELECT * FROM employee;
 SELECT * FROM role;
 SELECT * FROM department;
-
+SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name, employee.manager_id
+FROM employee
+INNER JOIN role ON employee.role_id = role.id
+INNER JOIN department ON role.department_id = department.id;
