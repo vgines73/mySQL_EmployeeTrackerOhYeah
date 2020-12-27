@@ -230,17 +230,26 @@ const viewEmployeesByDepartment = () => {
 }
 // function to view all employees by role
 const viewEmployeesByRole = () => {
-    let query =
-        "SELECT employee.id, employee.first_name, employee.last_name, role.title "
-    query +=
-        "FROM employee INNER JOIN role ON employee.role_id = role.id;"
-    console.log("Selecting all employees by role...\n");
-    connection.query(query, (err, res) => {
-        if (err) throw err;
-        // Log all results
-        console.table(res);
-        start();
-    });
+    inquirer.prompt({
+        type: "list",
+        name: "roles",
+        message: "Which role would you like to view?",
+        choices: ["Manager", "Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"]
+    })
+        .then((answer) => {
+            let query =
+                "SELECT employee.id, employee.first_name, employee.last_name, role.title "
+            query +=
+                "FROM employee INNER JOIN role ON employee.role_id = role.id WHERE ?;"
+            console.log("Selecting all employees by role...\n");
+            connection.query(query, { title: answer.roles }, (err, res) => {
+                if (err) throw err;
+                // Log all results
+                console.table(res);
+                start();
+            });
+        })
+
 };
 // function to view all employees by manager
 const viewEmployeesByManager = () => {
