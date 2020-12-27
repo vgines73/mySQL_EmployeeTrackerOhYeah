@@ -172,7 +172,7 @@ const view = () => {
         type: "list",
         name: "view",
         message: "What would you like to view?",
-        choices: ["View all employees", "View all Employees by Department", "View all Employees by Role", "View all Employees by Manager",],
+        choices: ["View all employees", "View all Employees by Department", "View all Employees by Role", "View all Employees by Manager", "View Departments", "View Roles"],
     })
         .then((res) => {
             // based on answer will call certain functions
@@ -184,17 +184,24 @@ const view = () => {
                 viewEmployeesByRole();
             } else if (res.view === "View all Employees by Manager") {
                 viewEmployeesByManager();
+            } else if (res.view === "View Departments"){
+                viewDepartments();
+            } else if (res.view === "View Roles") {
+                viewRoles();
             }
+ 
         });
 };
 // function to view all employees
 const viewEmployees = () => {
     let query =
-        "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name, employee.manager_id "
+        "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name AS department, concat(manager.first_name, ' ', manager.last_name) AS manager "
     query +=
         "FROM employee INNER JOIN role ON employee.role_id = role.id "
     query +=
-        "INNER JOIN department ON role.department_id = department.id;"
+        "INNER JOIN department ON role.department_id = department.id "
+    query +=
+        "LEFT JOIN employee AS manager ON employee.manager_id = manager.id;"
     console.log("Selecting all employees...\n");
     connection.query(query, (err, res) => {
         if (err) throw err;
@@ -261,6 +268,27 @@ const viewEmployeesByManager = () => {
         start();
     });
 };
+// function to view departments list
+const viewDepartments = () => {
+    console.log("Selecting all departments...\n");
+    connection.query("SELECT * FROM department", (err, res) => {
+        if (err) throw err;
+        // Log all results
+        console.table(res);
+        start();
+    });
+};
+// function to view roles list
+const viewRoles = () => {
+    console.log("Selecting all role...\n");
+    connection.query("SELECT * FROM role", (err, res) => {
+        if (err) throw err;
+        // Log all results
+        console.table(res);
+        start();
+    });
+};
+
 // FUNCTIONS IF USER PICKS UPDATE (UPDATE)
 // then user picks option to either update employee role or update employee manager
 const update = () => {
@@ -285,21 +313,21 @@ const updateEmployeeRoles = () => {
         type: "list",
         name: "updateRole",
         message: "Which employee would you like to update their role?",
-        choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron Jamaes", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
+        choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
     })
-        .then((res) => {
+        .then((answer) => {
             console.log("Updating employee role...\n");
             const query = connection.query(
                 "UPDATE role SET ? WHERE ?",
                 [
                     {
-                        title: res.title
+                        title: "Power Forward"
                     },
                     {
-                        salary: res.salary
+                        salary: "80000"
                     },
                 ],
-                (err, res) => {
+                [answer.updateRole], (err, res) => {
                     if (err) throw err;
                     console.log(`${res.affectedRows} role updated!\n`);
                     start();
@@ -308,39 +336,62 @@ const updateEmployeeRoles = () => {
             // logs the query being run
             console.log(query.sql)
 
-        })
+        });
 
 };
 // function to update employee managers
 const updateEmployeeManagers = () => {
-    console.log("Updating employee managers...\n");
-    const query = connection.query(
-        "UPDATE employee SET ? WHERE ?",
-        [
-            {
-                manager_id: "something goes here"
-            },
-        ],
-        (err, res) => {
-            if (err) throw err;
-            console.log(`${res.affectedRows} role updated!\n`);
+    inquirer.prompt(
+        {
+            type: "list",
+            name: "updateManager",
+            message: "Which Employee would you like to remove?",
+            choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
         }
-    );
-    // logs the query being run
-    console.log(query.sql)
+    ).then((answer) => {
+        console.log("Updating employee managers...\n");
+        const query = connection.query(
+            "UPDATE employee SET ? WHERE ?",
+            [
+                {
+                    manager_id: "something goes here"
+                },
+            ],
+            [answer.updateManager], (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} role updated!\n`);
+            }
+        );
+        // logs the query being run
+        console.log(query.sql)  
+    });
+
 };
 // function to remove an employee (DELETE)
 const removeEmployee = () => {
     inquirer.prompt(
         {
             type: "list",
-            name: "employee",
+            name: "remove",
             message: "Which Employee would you like to remove?",
-            choices: []
+            choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
         }
-    );
+    ).then((answer) => {
+        console.log("Deleting Employee...\n");
+        connection.query(
+            "DELETE FROM employee WHERE first_name = ? AND last_name = ?", answer.remove, (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} Employee has been...DELETED!!\n`)
+                // Call function to see updated employee list after deletion.
+                viewEmployees();
+            }
+        )
+    });
 };
-
+//issues: view employees by manager need to get managers name showing in column
+//        view all employees doesn't show managers name; shows id instead
+//        update employee role and manager not working
+//        remove employee function deletes all employees instead of one employee
 
 
 
