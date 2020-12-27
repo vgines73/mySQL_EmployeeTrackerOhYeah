@@ -260,8 +260,16 @@ const viewEmployeesByRole = () => {
 };
 // function to view all employees by manager
 const viewEmployeesByManager = () => {
+    let query = 
+        "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name AS department, concat(manager.first_name, ' ', manager.last_name) AS manager "
+    query += 
+        "FROM employee INNER JOIN role ON employee.role_id = role.id "
+    query +=
+        "INNER JOIN department ON role.department_id = department.id "
+    query +=
+        "INNER JOIN employee as Manager on employee.manager_id = manager.id;"
     console.log("Selecting all employees by Manager...\n");
-    connection.query("SELECT * FROM role", (err, res) => {
+    connection.query(query, (err, res) => {
         if (err) throw err;
         // Log all results
         console.table(res);
