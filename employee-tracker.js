@@ -135,16 +135,14 @@ const addEmployees = () => {
             message: "What is their Last Name?"
         },
         {
-            type: "list",
-            name: "title",
-            message: "what is thier job title?",
-            choices: ["Manager", "Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"]
+            type: "input",
+            name: "roleID",
+            message: "what is thier role ID?",
         },
         {
-            type: "list",
-            name: "manager",
-            message: "Who is thier Manager?",
-            choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
+            type: "input",
+            name: "managerID",
+            message: "Who is thier Manager ID?"
         }
     ])
         .then((res) => {
@@ -154,8 +152,8 @@ const addEmployees = () => {
                 {
                     first_name: res.firstName,
                     last_name: res.lastName,
-                    role_id: res.title,
-                    manager_id: res.manager
+                    role_id: res.roleID,
+                    manager_id: res.managerID
                 },
                 (err) => {
                     if (err) throw err;
@@ -191,7 +189,7 @@ const view = () => {
 };
 // function to view all employees
 const viewEmployees = () => {
-    let query = 
+    let query =
         "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.department_name, employee.manager_id "
     query +=
         "FROM employee INNER JOIN role ON employee.role_id = role.id "
@@ -207,24 +205,33 @@ const viewEmployees = () => {
 };
 // function to view all employees by department
 const viewEmployeesByDepartment = () => {
-    let query = 
-    "SELECT employee.id, employee.first_name, employee.last_name, department.department_name "
-    query +=
-        "FROM employee INNER JOIN role ON employee.role_id = role.id "
-    query +=
-        "INNER JOIN department ON role.department_id = department.id;"
-    console.log("Selecting all employees by department...\n");
-    connection.query(query, (err, res) => {
-        if (err) throw err;
-        // Log all results
-        console.table(res)
-        start();
-    });
-};
+    inquirer.prompt({
+        type: "list",
+        name: "department",
+        message: "which department would you like to view",
+        choices: ["Management", "Player"]
+    })
+        .then((answer) => {
+            let query =
+                "SELECT employee.id, employee.first_name, employee.last_name, department.department_name "
+            query +=
+                "FROM employee INNER JOIN role ON employee.role_id = role.id "
+            query +=
+                "INNER JOIN department ON role.department_id = department.id WHERE ?;"
+            console.log("Selecting all employees by department...\n");
+            connection.query(query, { department_name: answer.department }, (err, res) => {
+                if (err) throw err;
+                // Log all results
+                console.table(res)
+                start();
+            })
+        });
+
+}
 // function to view all employees by role
 const viewEmployeesByRole = () => {
-    let query = 
-    "SELECT employee.id, employee.first_name, employee.last_name, role.title "
+    let query =
+        "SELECT employee.id, employee.first_name, employee.last_name, role.title "
     query +=
         "FROM employee INNER JOIN role ON employee.role_id = role.id;"
     console.log("Selecting all employees by role...\n");
@@ -265,24 +272,35 @@ const update = () => {
 };
 // function to update employee role
 const updateEmployeeRoles = () => {
-    console.log("Updating employee role...\n");
-    const query = connection.query(
-        "UPDATE role SET ? WHERE ?",
-        [
-            {
-                title: "something goes here"
-            },
-            {
-                salary: "something goes here"
-            },
-        ],
-        (err, res) => {
-            if (err) throw err;
-            console.log(`${res.affectedRows} role updated!\n`);
-        }
-    );
-    // logs the query being run
-    console.log(query.sql)
+    inquirer.prompt({
+        type: "list",
+        name: "updateRole",
+        message: "Which employee would you like to update their role?",
+        choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron Jamaes", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
+    })
+        .then((res) => {
+            console.log("Updating employee role...\n");
+            const query = connection.query(
+                "UPDATE role SET ? WHERE ?",
+                [
+                    {
+                        title: res.title
+                    },
+                    {
+                        salary: res.salary
+                    },
+                ],
+                (err, res) => {
+                    if (err) throw err;
+                    console.log(`${res.affectedRows} role updated!\n`);
+                    start();
+                }
+            );
+            // logs the query being run
+            console.log(query.sql)
+
+        })
+
 };
 // function to update employee managers
 const updateEmployeeManagers = () => {
