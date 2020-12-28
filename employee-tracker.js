@@ -414,7 +414,7 @@ const removeEmployee = () => {
             "DELETE FROM employee WHERE ?", { last_name: answer.remove }, (err, res) => {
                 if (err) throw err;
                 console.log(`${res.affectedRows} Employee has been...DELETED!!\n`)
-                // Call function to see updated employee list after deletion.
+                // call function to view updated employee list after deletion.
                 viewEmployees();
             }
         )
@@ -434,16 +434,31 @@ const removeDepartment = () => {
             "DELETE FROM department WHERE ?", { department_name: answer.department }, (err, res) => {
                 if (err) throw err;
                 console.log(`${res.affectedRows} ${answer.department} has been...DELETED!\n`)
+                // call function to view updated department after deletion
                 viewDepartments();
             }
         )
     });
 };
-
-
-//issues: 
-//        need to create remove function for department and role
-
-
+// function to remove role
+const removeRole = () => {
+    inquirer.prompt({
+        type: "list",
+        name: "role",
+        message: "Which role would you like to remove?",
+        choices: ["Manager", "Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center", "Towel Boy"]
+    })
+    .then((answer) => {
+        console.log("Deleting Role...\n")
+        connection.query(
+            "DELETE FROM role WHERE ?", { title: answer.role }, (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} ${answer.role} has been...DELETED!`);
+                // call function to view updated roles after deletion
+                viewRoles();
+            }
+        )
+    })
+}
 
 start();

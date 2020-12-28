@@ -35,6 +35,8 @@ INSERT INTO role(id, title, salary, department_id)
 VALUES (5, "Power Forward", 50000, 2);
 INSERT INTO role(id, title, salary, department_id)
 VALUES (6, "Center", 50000, 2);
+INSERT INTO role(id, title, salary, department_id)
+VALUES (7, "Towel Boy", 50, 2);
 
 INSERT INTO department(name)
 VALUES ("Management");
