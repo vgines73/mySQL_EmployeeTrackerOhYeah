@@ -216,7 +216,7 @@ const viewEmployeesByDepartment = () => {
         type: "list",
         name: "department",
         message: "which department would you like to view",
-        choices: ["Management", "Player"]
+        choices: ["Management", "Player", "Owner", "Space Cowboy"]
     })
         .then((answer) => {
             let query =
@@ -321,7 +321,7 @@ const updateEmployeeRoles = () => {
         type: "list",
         name: "updateRole",
         message: "Which employee would you like to update their role?",
-        choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
+        choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain", "Mr. Hugsy"]
     })
         .then((answer) => {
             console.log("Updating employee role...\n");
@@ -354,7 +354,7 @@ const updateEmployeeManagers = () => {
             type: "list",
             name: "updateManager",
             message: "Which Employee would you like to update?",
-            choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
+            choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain", "Mr. Hugsy"]
         }
     ).then((answer) => {
         console.log("Updating employee managers...\n");
@@ -406,7 +406,7 @@ const removeEmployee = () => {
             type: "list",
             name: "remove",
             message: "Which Employee would you like to remove?",
-            choices: ["Gines", "Jordan", "Bryant", "James", "Durant", "Curry", "Iverson", "Young", "Doncic", "Chamberlain"]
+            choices: ["Gines", "Jordan", "Bryant", "James", "Durant", "Curry", "Iverson", "Young", "Doncic", "Chamberlain", "Hugsy"]
         }
     ).then((answer) => {
         console.log("Deleting Employee...\n");

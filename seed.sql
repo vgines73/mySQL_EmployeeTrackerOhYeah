@@ -20,6 +20,8 @@ INSERT INTO employee(id, first_name, last_name, role_id, manager_id)
 VALUES (9, "Luka", "Doncic", 2, 1);
 INSERT INTO employee(id, first_name, last_name, role_id, manager_id)
 VALUES (10, "Wilt", "Chamberlain", 6, 1);
+INSERT INTO employee(id, first_name, last_name, role_id, manager_id)
+VALUES (11, "Mr.", "Hugsy", 6, 1);
 
 
 
