@@ -35,7 +35,7 @@ const start = () => {
             } else if (res.start === "UPDATE") {
                 update();
             } else if (res.start === "REMOVE") {
-                removeEmployee();
+                remove();
             } else {
                 connection.end();
                 process.exit(0);
@@ -137,12 +137,12 @@ const addEmployees = () => {
         {
             type: "input",
             name: "roleID",
-            message: "what is thier role ID?",
+            message: "what is their role ID?",
         },
         {
             type: "input",
             name: "managerID",
-            message: "Who is thier Manager ID?"
+            message: "What is their Manager ID?"
         }
     ])
         .then((res) => {
@@ -220,7 +220,7 @@ const viewEmployeesByDepartment = () => {
     })
         .then((answer) => {
             let query =
-                "SELECT employee.id, employee.first_name, employee.last_name, department.department_name "
+                "SELECT employee.id, employee.first_name, employee.last_name, department.department_name AS department "
             query +=
                 "FROM employee INNER JOIN role ON employee.role_id = role.id "
             query +=
@@ -245,7 +245,7 @@ const viewEmployeesByRole = () => {
     })
         .then((answer) => {
             let query =
-                "SELECT employee.id, employee.first_name, employee.last_name, role.title "
+                "SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary "
             query +=
                 "FROM employee INNER JOIN role ON employee.role_id = role.id WHERE ?;"
             console.log("Selecting all employees by role...\n");
@@ -326,16 +326,16 @@ const updateEmployeeRoles = () => {
         .then((answer) => {
             console.log("Updating employee role...\n");
             const query = connection.query(
-                "UPDATE role SET ? WHERE ?",
+                "UPDATE employee SET ? WHERE ?",
                 [
                     {
-                        title: "Power Forward"
+                        role_id: 5
                     },
                     {
-                        salary: "80000"
+                        id: 5
                     },
                 ],
-                [answer.updateRole], (err, res) => {
+                (err, res) => {
                     if (err) throw err;
                     console.log(`${res.affectedRows} role updated!\n`);
                     start();
@@ -353,7 +353,7 @@ const updateEmployeeManagers = () => {
         {
             type: "list",
             name: "updateManager",
-            message: "Which Employee would you like to remove?",
+            message: "Which Employee would you like to update?",
             choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
         }
     ).then((answer) => {
@@ -362,18 +362,42 @@ const updateEmployeeManagers = () => {
             "UPDATE employee SET ? WHERE ?",
             [
                 {
-                    manager_id: "something goes here"
+                    manager_id: 0
                 },
+                {
+                    id: 10
+                }
             ],
-            [answer.updateManager], (err, res) => {
+            (err, res) => {
                 if (err) throw err;
                 console.log(`${res.affectedRows} role updated!\n`);
+                viewEmployees();
             }
         );
         // logs the query being run
         console.log(query.sql)  
     });
 
+};
+// FUNCTIONS IF USER SELECTS remove (DELETE)
+// function handling to delete department, role, or employee
+const remove = () => {
+    inquirer.prompt({
+        type: "list",
+        name: "remove",
+        message: "What would you like to remove?",
+        choices: ["DEPARTMENTS", "ROLES", "EMPLOYEES"],
+    })
+        .then((res) => {
+            // based on answer will call certain functions
+            if (res.remove === "DEPARTMENTS") {
+                removeDepartment();
+            } else if (res.remove === "ROLES") {
+                removeRole();
+            } else if (res.remove === "EMPLOYEES") {
+                removeEmployee();
+            }
+        });
 };
 // function to remove an employee (DELETE)
 const removeEmployee = () => {
@@ -382,12 +406,12 @@ const removeEmployee = () => {
             type: "list",
             name: "remove",
             message: "Which Employee would you like to remove?",
-            choices: ["Vincent Gines", "Michael Jordan", "Kobe Bryant", "Lebron James", "Kevin Durant", "Stephen Curry", "Allen Iverson", "Trae Young", "Luka Doncic", "Wilt Chamberlain"]
+            choices: ["Gines", "Jordan", "Bryant", "James", "Durant", "Curry", "Iverson", "Young", "Doncic", "Chamberlain"]
         }
     ).then((answer) => {
         console.log("Deleting Employee...\n");
         connection.query(
-            "DELETE FROM employee WHERE first_name = ? AND last_name = ?", answer.remove, (err, res) => {
+            "DELETE FROM employee WHERE last_name ?)", answer.remove, (err, res) => {
                 if (err) throw err;
                 console.log(`${res.affectedRows} Employee has been...DELETED!!\n`)
                 // Call function to see updated employee list after deletion.
@@ -396,10 +420,10 @@ const removeEmployee = () => {
         )
     });
 };
-//issues: view employees by manager need to get managers name showing in column
-//        view all employees doesn't show managers name; shows id instead
+//issues: 
 //        update employee role and manager not working
 //        remove employee function deletes all employees instead of one employee
+//        need to create remove function for department and role
 
 
 

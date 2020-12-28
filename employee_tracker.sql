@@ -69,7 +69,14 @@ VALUES ("Player");
 SELECT * FROM employee;
 SELECT * FROM role;
 SELECT * FROM department;
-SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name, employee.manager_id
+SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name AS department, concat(manager.first_name, " ", manager.last_name) AS manager
 FROM employee
 INNER JOIN role ON employee.role_id = role.id
-INNER JOIN department ON role.department_id = department.id;
+INNER JOIN department ON role.department_id = department.id
+LEFT JOIN employee AS manager ON employee.manager_id = manager.id;
+
+SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name AS department, concat(manager.first_name, " ", manager.last_name) AS manager
+FROM employee
+INNER JOIN role ON employee.role_id = role.id
+INNER JOIN department ON role.department_id = department.id
+INNER JOIN employee AS manager ON employee.manager_id = manager.id;
