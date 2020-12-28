@@ -411,7 +411,7 @@ const removeEmployee = () => {
     ).then((answer) => {
         console.log("Deleting Employee...\n");
         connection.query(
-            "DELETE FROM employee WHERE last_name ?)", answer.remove, (err, res) => {
+            "DELETE FROM employee WHERE ?", { last_name: answer.remove }, (err, res) => {
                 if (err) throw err;
                 console.log(`${res.affectedRows} Employee has been...DELETED!!\n`)
                 // Call function to see updated employee list after deletion.
@@ -421,8 +421,6 @@ const removeEmployee = () => {
     });
 };
 //issues: 
-//        update employee role and manager not working
-//        remove employee function deletes all employees instead of one employee
 //        need to create remove function for department and role
 
 
