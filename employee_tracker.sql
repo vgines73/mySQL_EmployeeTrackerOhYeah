@@ -66,6 +66,7 @@ VALUES ("Management");
 INSERT INTO department(department_name)
 VALUES ("Player");
 
+
 SELECT * FROM employee;
 SELECT * FROM role;
 SELECT * FROM department;

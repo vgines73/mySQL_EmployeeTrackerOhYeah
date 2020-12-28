@@ -420,6 +420,27 @@ const removeEmployee = () => {
         )
     });
 };
+// function to remove department
+const removeDepartment = () => {
+    inquirer.prompt({
+        type: "list",
+        name: "department",
+        message: "Which department would you like to remove?",
+        choices: ["Management", "Player", "Owner", "Space Cowboy"]
+    })
+    .then((answer) => {
+        console.log("Deleting Department...\n")
+        connection.query(
+            "DELETE FROM department WHERE ?", { department_name: answer.department }, (err, res) => {
+                if (err) throw err;
+                console.log(`${res.affectedRows} ${answer.department} has been...DELETED!\n`)
+                viewDepartments();
+            }
+        )
+    });
+};
+
+
 //issues: 
 //        need to create remove function for department and role
 

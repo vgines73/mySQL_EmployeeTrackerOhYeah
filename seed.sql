@@ -40,3 +40,7 @@ INSERT INTO department(name)
 VALUES ("Management");
 INSERT INTO department(name)
 VALUES ("Player");
+INSERT INTO department(department_name)
+VALUES ("Owner");
+INSERT INTO department(department_name)
+VALUES ("Space Cowboy");
