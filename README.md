@@ -36,8 +36,6 @@ After creating my database and inserting data for the tables, I connected info f
 
   * [Test Instructions](#Test-Instructions)
 
-  * [Screenshots](#Screenshots)
-
   * [Demo](#Demo)
 
   * [Questions](#Questions)
@@ -63,11 +61,8 @@ Vincent Gines. Ask for a Pull Request from my Github profile below in the questi
 ## Test Instructions:
 First, go to my Github Profile and clone my mySQL Employee Tracker repository onto your computer using gitbash. Then open up your terminal and install the dependencies by typing: npm install. Once installed, copy the schema files onto your workbench and load it. Once good to go back to your terminal and type: node employee-tracker.js to run the app in node. There you will be able to track your employees, where you can add (employees, roles, departments), view (all employees, all employees by role, all employees by manager, all departments, and all roles), update employee roles and employee Managers, remove employees, roles, and employees.
 
-## Screenshots:
-
-
 ## Demo:
-
+Click on the link to see my live demo: https://drive.google.com/file/d/1CW0VpNUbkdo31_YGTsIdUjnnC2-4e2xW/view
 
 ## Challenges:
 Some of the challenges I had to figure out was the syntax, Learning the INNER/LEFT/RIGHT join, and just going with my gut. When I first started the assignment, I just went off the readme and didn't pay too much attention to the demo. When I hit a roadblock I was on the fence whether to make the assigment look exactly like the demo, and started to alter it according to the demo hoping I didn't run into too much issues. However, during that process, I reverted back to what I had originally done because I felt more comfortable writing it this way. Anyways, I pushed forward and finished the assignment to the best of my ability. 
