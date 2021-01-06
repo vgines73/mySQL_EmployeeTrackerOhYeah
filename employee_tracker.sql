@@ -1,6 +1,7 @@
 DROP DATABASE IF EXISTS employee_tracker_db;
 CREATE DATABASE employee_tracker_db;
 USE employee_tracker_db;
+
 CREATE TABLE employee(
     id INT NOT NULL AUTO_INCREMENT,
     first_name VARCHAR(30) NOT NULL,
@@ -26,8 +27,11 @@ CREATE TABLE department(
 );
 
 SELECT * FROM employee;
+
 SELECT * FROM role;
+
 SELECT * FROM department;
+
 SELECT employee.first_name, employee.last_name, role.title, role.salary, department.department_name AS department, concat(manager.first_name, " ", manager.last_name) AS manager
 FROM employee
 INNER JOIN role ON employee.role_id = role.id
